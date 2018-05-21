@@ -1,18 +1,17 @@
 fileFormatVersion: 2
-guid: 5f9db8a428ecf314c8515cfecbe2fb55
-timeCreated: 1526874903
+guid: 6e44324335eb77b49a3648a974d23480
+timeCreated: 1526882349
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: world_map_24x80x80
     400000: //RootNode
-    400002: world_map_24x80x80
-    2100000: world_grass
-    2300000: world_map_24x80x80
-    3300000: world_map_24x80x80
-    4300000: world_map_24x80x80
+    2100000: mat_bear_brown
+    2100002: mat_bear_brown_shadow
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: paper_bear
   externalObjects: {}
   materials:
     importMaterials: 1

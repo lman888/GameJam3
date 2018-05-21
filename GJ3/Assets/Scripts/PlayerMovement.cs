@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     /// <summary>
     /// Makes privates public
     /// </summary>
-    public float speed = 0.5f;
+    private Vector3 speed;
 
 	// Update is called once per frame
 	void Update ()
@@ -20,26 +20,22 @@ public class PlayerMovement : MonoBehaviour
         //    transform.Translate(Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime) - Bear.transform.position);
         //}
 
-        if(Input.GetMouseButton(0) == true)
+        Vector3 pos = transform.position;
+       
+        if (Input.GetKeyDown("left"))
         {
-            Vector2 mousePos = Input.mousePosition;
-            Vector3 mouseViewPos = Camera.main.ScreenToViewportPoint(new Vector3(mousePos.x, 0, 10));
-           //if(mouseViewPos.x < 0.4 || mouseViewPos.x > 0.6)
-           //{
-                Vector3 pos = transform.position;
-                float speedScale = Mathf.Abs(mouseViewPos.x - 0.5f) * 2.0f;
-                speedScale *= speedScale;
-                if (mouseViewPos.x < 0.5f)
-                {
-                    pos.z -= 5.0f * speedScale * Time.deltaTime;
-                }
-                else
-                {
-                    pos.z += 5.0f * speedScale * Time.deltaTime;
-
-                }
-                transform.position = pos;
-            //}
+            pos.z -= 5.0f * Time.deltaTime;
         }
+
+        if (Input.GetKeyDown("right"))
+        {
+            pos.z += 5.0f * Time.deltaTime;
+        }
+
+        if (Input.GetKeyDown("space"))
+        {
+            
+        }
+
 	}
 }
