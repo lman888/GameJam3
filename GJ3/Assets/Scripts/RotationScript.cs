@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class RotationScript : MonoBehaviour {
     
-    [Range(10.0f, 100.0f)]
-    [Tooltip("Used to control how fast the game world rotates normally (In degrees per second)")]
+    public GameObject Capsule;
+
+    [Range(10.0f, 100.0f)] [Tooltip("Used to control how fast the game world rotates normally (In degrees per second)")]
     public float normalSpeed = 10.0f;
 
     [Tooltip("How much does the world speed up per second (in degrees per second per second")]
     public float speedIncrementPerSecond = 0.01f;
 
     [Range(10.0f, 100.0f)]
-    [Tooltip("Used to control how fast the game world rotates when boosting (In degrees per second)")]
+    [Tooltip("Used to control the max speed cap of the world")]
     public float maxspeed = 10.0f;
 
     [Range(10.0f, 100.0f)]
@@ -22,16 +25,17 @@ public class RotationScript : MonoBehaviour {
     [Tooltip("Specifies how long boost stays active for once collected (In seconds)")]
     public float boostTime = 2.0f;
 
-    bool BoostActive = false;
-
+    bool BoostActive;
+    public int health = 5;
 
     private float bonusSpeed = 0.0f;
 
+    // capsule movement
 	// Use this for initialization
 	void Start ()
     {
-        //speed = 10;
-	}
+
+    }
 
     // Update is called once per frame
     void Update()
@@ -66,5 +70,8 @@ public class RotationScript : MonoBehaviour {
         yield return new WaitForSeconds(boostTime);
         BoostActive = false;
     }
-}
 
+    void OnCollisionEnter(Collision dataFromCollision)
+    {
+    }
+}
