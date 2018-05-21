@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour
+{
+    /// <summary>
+    /// Makes privates public
+    /// </summary>
+    [SerializeField]
+    private GameObject Bear;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
+    private float runSpeed;
+
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+    {
 	}
 }
