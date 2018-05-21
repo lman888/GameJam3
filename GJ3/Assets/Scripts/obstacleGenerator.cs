@@ -10,7 +10,12 @@ public class obstacleGenerator : MonoBehaviour
     public GameObject obtstacleTypeB;
     [SerializeField]
     public GameObject ground;
-    private List< List<Vector3> > spownerSetPositions;
+    [SerializeField]
+    public GameObject spawner;
+
+    private List<GameObject> spawnerSet;
+
+    private List<List<GameObject>> spawnerSetList;
 
     float floorOffset;
     float sideOffsets;
@@ -29,18 +34,36 @@ public class obstacleGenerator : MonoBehaviour
 
     void InitializeSpawnerSet()
     {
-        Vector3 groundBound;
-        Vector3 midSpawnerPos;
-        Vector3 leftSpawnerPos;
-        Vector3 rightSpawnerPos;
-        
-        groundBound = ground.GetComponent<Renderer>().bounds.size;
-        
-        midSpawnerPos = new Vector3(groundBound.x, groundBound.y, groundBound.z + floorOffset);
-        leftSpawnerPos = midSpawnerPos + new Vector3(midSpawnerPos.x - sideOffsets, midSpawnerPos.y, midSpawnerPos.z);
-        
-        RaycastHit leftHit;
-        
-        Physics.Raycast(leftSpawnerPos, Vector3.forward, out leftHit, Mathf.Infinity);
+        Vector3 groundPos =  ground.transform.position;
+
+        RaycastHit midHit;
+        RaycastHit lftHit;
+        RaycastHit rgtHit;
+
+        Physics.Raycast(groundPos, Vector3.back, out midHit, Mathf.Infinity);
+        Vector3 midSpawnerPos = midHit.point - new Vector3(floorOffset,0 , 0);
+
+        Vector3 lftOffsetPos = midSpawnerPos - new Vector3(0, 0, sideOffsets);
+        Physics.Raycast(lftOffsetPos, Vector3.forward, out lftHit, Mathf.Infinity);
+
+        Vector3 rgtOffsetPos = midSpawnerPos - new Vector3(0, 0, sideOffsets);
+        Physics.Raycast(rgtOffsetPos, Vector3.forward, out rgtHit, Mathf.Infinity);
+
+        spawnerSet.Add(Instantiate(spawner));
+        spawnerSet[0].transform.position = midSpawnerPos;
+        spawnerSet[0].transform.up = midHit.normal;
+
+        spawnerSet.Add(Instantiate(spawner));
+        spawnerSet[1].transform.position = lftHit.transform.position + (lftHit.normal * floorOffset);
+        spawnerSet[1].transform.up = lftHit.normal;
+
+        spawnerSet.Add(Instantiate(spawner));
+        spawnerSet[2].transform.position = lftHit.transform.position + (rgtHit.normal * floorOffset);
+        spawnerSet[2].transform.up = rgtHit.normal;
+
+        foreach (GameObject go in spawnerSet)
+        {
+            go.transform.SetParent(ground.transform.Find("ObjectHolder").transform);
+        }
     }
 }
