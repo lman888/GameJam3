@@ -4,66 +4,143 @@ using UnityEngine;
 
 public class obstacleGenerator : MonoBehaviour
 {
-    [SerializeField]
-    public GameObject obtstacleTypeA;
-    [SerializeField]
-    public GameObject obtstacleTypeB;
+
+
     [SerializeField]
     public GameObject ground;
     [SerializeField]
     public GameObject spawner;
 
-    private List<GameObject> spawnerSet;
+    private List<List<GameObject>> spawnerSetList = new List<List<GameObject>>();
 
-    private List<List<GameObject>> spawnerSetList;
 
-    float floorOffset;
-    float sideOffsets;
+    public float floorOffset = 0.0f;
+    public float sideOffsets = 3.0f;
+    public float rowOffset = 10.0f;
+
+    //private float worldRotation = 0.0f;
+
+    public float RayDistance = 1000.0f;
 
     // Use this for initialization
-    void Start ()
+    void Start()
+    {
+        //floorOffset = 0.0f;
+        //sideOffsets = 3.0f;
+        //rowOffset = 10.0f;
+
+        InitializeSpawnerSet();
+    }
+
+    // Update is called once per frame
+    void Update()
     {
 
     }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
 
     void InitializeSpawnerSet()
     {
-        Vector3 groundPos =  ground.transform.position;
-
-        RaycastHit midHit;
-        RaycastHit lftHit;
-        RaycastHit rgtHit;
-
-        Physics.Raycast(groundPos, Vector3.back, out midHit, Mathf.Infinity);
-        Vector3 midSpawnerPos = midHit.point - new Vector3(floorOffset,0 , 0);
-
-        Vector3 lftOffsetPos = midSpawnerPos - new Vector3(0, 0, sideOffsets);
-        Physics.Raycast(lftOffsetPos, Vector3.forward, out lftHit, Mathf.Infinity);
-
-        Vector3 rgtOffsetPos = midSpawnerPos - new Vector3(0, 0, sideOffsets);
-        Physics.Raycast(rgtOffsetPos, Vector3.forward, out rgtHit, Mathf.Infinity);
-
-        spawnerSet.Add(Instantiate(spawner));
-        spawnerSet[0].transform.position = midSpawnerPos;
-        spawnerSet[0].transform.up = midHit.normal;
-
-        spawnerSet.Add(Instantiate(spawner));
-        spawnerSet[1].transform.position = lftHit.transform.position + (lftHit.normal * floorOffset);
-        spawnerSet[1].transform.up = lftHit.normal;
-
-        spawnerSet.Add(Instantiate(spawner));
-        spawnerSet[2].transform.position = lftHit.transform.position + (rgtHit.normal * floorOffset);
-        spawnerSet[2].transform.up = rgtHit.normal;
-
-        foreach (GameObject go in spawnerSet)
+        for (float angle = 0; angle <= 360; angle += rowOffset)
         {
-            go.transform.SetParent(ground.transform.Find("ObjectHolder").transform);
+            List<GameObject> spawnerSet = new List<GameObject>();
+            Vector3 rayDir = Vector3.right;
+            Quaternion rot = Quaternion.AngleAxis(angle, transform.forward);
+            rayDir = rot * rayDir;
+
+            Vector3 rayShootPosition = (transform.position + (rayDir * RayDistance));
+
+            Ray r = new Ray(rayShootPosition, -rayDir);
+            RaycastHit hitInfo;
+            bool hitSomething = Physics.Raycast(r, out hitInfo, RayDistance);
+            if (hitSomething)
+            {
+                spawnerSet.Add(Instantiate(spawner));
+                spawnerSet[0].transform.position = hitInfo.point;
+                spawnerSet[0].transform.up = hitInfo.normal;
+                spawnerSet[0].transform.SetParent(GameObject.Find("ObjectHolder").transform);
+            }
+
+            rayShootPosition += transform.forward * sideOffsets;
+
+            r = new Ray(rayShootPosition, -rayDir);
+            hitSomething = Physics.Raycast(r, out hitInfo, RayDistance);
+            if (hitSomething)
+            {
+                spawnerSet.Add(Instantiate(spawner));
+                spawnerSet[1].transform.position = hitInfo.point;
+                spawnerSet[1].transform.up = hitInfo.normal;
+                spawnerSet[1].transform.SetParent(GameObject.Find("ObjectHolder").transform);
+            }
+
+            rayShootPosition -= 2 * transform.forward * sideOffsets;
+            r = new Ray(rayShootPosition, -rayDir);
+            hitSomething = Physics.Raycast(r, out hitInfo, RayDistance);
+            if (hitSomething)
+            {
+                spawnerSet.Add(Instantiate(spawner));
+                spawnerSet[2].transform.position = hitInfo.point;
+                spawnerSet[2].transform.up = hitInfo.normal;
+                spawnerSet[2].transform.SetParent(GameObject.Find("ObjectHolder").transform);
+            }
+
+            spawnerSetList.Add(spawnerSet);
         }
     }
+
+    void DeleteSpawners()
+    {
+        foreach (List<GameObject> set in spawnerSetList)
+        {
+            for (int i = 0; i < set.Count; ++i)
+            {
+                if (set[i].transform.position.y < 0)
+                {
+                    //spawnerSetList.Remove
+                    Destroy(set[i]);
+                }
+            }
+        }
+    }
+
+
+
+    //private void OnDrawGizmos()
+    //{
+    //    for (float angle = 0; angle <= 360; angle += rowOffset)
+    //    {
+    //        Vector3 rayDir = Vector3.right;
+    //        Quaternion rot = Quaternion.AngleAxis(angle, transform.forward);
+    //        rayDir = rot * rayDir;
+
+    //        Vector3 rayShootPosition = (transform.position + (rayDir * RayDistance));
+
+    //        Ray r = new Ray(rayShootPosition, -rayDir);
+    //        RaycastHit hitInfo;
+    //        bool hitSomething = Physics.Raycast(r, out hitInfo, RayDistance);
+    //        if (hitSomething)
+    //        {
+    //            Gizmos.DrawCube(hitInfo.point, new Vector3(2, 2, 2));
+    //            Gizmos.DrawRay(hitInfo.point, hitInfo.normal * 3);
+    //        }
+
+    //        rayShootPosition += transform.forward * sideOffsets;
+
+    //        r = new Ray(rayShootPosition, -rayDir);
+    //        hitSomething = Physics.Raycast(r, out hitInfo, RayDistance);
+    //        if (hitSomething)
+    //        {
+    //            Gizmos.DrawCube(hitInfo.point, new Vector3(2, 2, 2));
+    //            Gizmos.DrawRay(hitInfo.point, hitInfo.normal * 3);
+    //        }
+
+    //        rayShootPosition -= 2 * transform.forward * sideOffsets;
+    //        r = new Ray(rayShootPosition, -rayDir);
+    //        hitSomething = Physics.Raycast(r, out hitInfo, RayDistance);
+    //        if (hitSomething)
+    //        {
+    //            Gizmos.DrawCube(hitInfo.point, new Vector3(2, 2, 2));
+    //            Gizmos.DrawRay(hitInfo.point, hitInfo.normal * 3);
+    //        }
+    //    }
+    //}
 }
