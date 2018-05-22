@@ -70,8 +70,4 @@ public class RotationScript : MonoBehaviour {
         yield return new WaitForSeconds(boostTime);
         BoostActive = false;
     }
-
-    void OnCollisionEnter(Collision dataFromCollision)
-    {
-    }
 }
