@@ -5,37 +5,35 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    /// <summary>
-    /// Makes privates public
-    /// </summary>
-    private Vector3 speed;
 
-	// Update is called once per frame
-	void Update ()
+    public float moveSpeed;
+    public float jumpForce;
+
+    //How fast/slow the player falls
+    public float gravityScale;
+    public CharacterController controller;
+
+    private Vector3 moveDirection;
+
+    private void Start()
     {
-        //if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
-        //{
-        //    Vector3 target = Camera.main.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-        //
-        //    transform.Translate(Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime) - Bear.transform.position);
-        //}
+        controller = GetComponent<CharacterController>();
+    }
 
-        Vector3 pos = transform.position;
-       
-        if (Input.GetKeyDown("left"))
+    // Update is called once per frame
+    void Update ()
+    {
+        //Arrow keys to move
+        moveDirection = new Vector3(Input.GetAxis("Horizontal")  * moveSpeed * Time.deltaTime, 0f);
+
+        //Space to jump
+        if (Input.GetButtonDown("Jump"))
         {
-            pos.z -= 5.0f * Time.deltaTime;
+            moveDirection.y = jumpForce;
         }
 
-        if (Input.GetKeyDown("right"))
-        {
-            pos.z += 5.0f * Time.deltaTime;
-        }
-
-        if (Input.GetKeyDown("space"))
-        {
-            
-        }
-
+        //Adds gravity as the player falls
+        moveDirection.y = moveDirection.y + (Physics.gravity.y * gravityScale);
+        controller.Move(moveDirection * Time.deltaTime);
 	}
 }
