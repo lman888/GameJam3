@@ -5,20 +5,19 @@ using UnityEngine;
 
 
 public class RotationScript : MonoBehaviour {
-    
     public GameObject Capsule;
-
-    [Range(10.0f, 100.0f)] [Tooltip("Used to control how fast the game world rotates normally (In degrees per second)")]
+    private bool stopworld;
+    [Range(0.0f, 100.0f)] [Tooltip("Used to control how fast the game world rotates normally (In degrees per second)")]
     public float normalSpeed = 10.0f;
 
     [Tooltip("How much does the world speed up per second (in degrees per second per second")]
     public float speedIncrementPerSecond = 0.01f;
 
-    [Range(10.0f, 100.0f)]
+    [Range(0.0f, 100.0f)]
     [Tooltip("Used to control the max speed cap of the world")]
     public float maxspeed = 10.0f;
 
-    [Range(10.0f, 100.0f)]
+    [Range(0.0f, 100.0f)]
     [Tooltip("Used to control how fast the game world rotates when boosting (In degrees per second)")]
     public float boostSpeed = 10.0f;
 
@@ -30,11 +29,12 @@ public class RotationScript : MonoBehaviour {
 
     private float bonusSpeed = 0.0f;
 
+    public float StopSpeed = 0.0f;
     // capsule movement
 	// Use this for initialization
 	void Start ()
     {
-
+        stopworld = false;
     }
 
     // Update is called once per frame
@@ -54,6 +54,12 @@ public class RotationScript : MonoBehaviour {
         if (speed >= maxspeed)
         {
             speed = maxspeed;
+            Debug.Log("world stop");
+        }
+
+        if (stopworld == true)
+        {
+            speed = StopSpeed;
         }
         transform.Rotate(new Vector3(0, 0, 1), Time.deltaTime * speed);
 	}
@@ -69,5 +75,10 @@ public class RotationScript : MonoBehaviour {
     {
         yield return new WaitForSeconds(boostTime);
         BoostActive = false;
+    }
+
+    public void Stop()
+    {
+        stopworld = true;
     }
 }

@@ -5,40 +5,48 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public GameObject GameWorld;
+    public RotationScript rotationScript;
+
+    //jumping
     public float moveSpeed;
     public float jumpForce;
     public float jumpSpeed;
-    public GameObject GameWorld;
-    bool isAlive;
-    private int Health;
-    public bool HealthIncreasetimerLimit;
-    public float HealthlimitTime;
-    /* gui control */
+    private bool isJumping = false;
+    private float jumpT = 0.0f;
+    private float jumpOffset = 0.0f;
+    private Vector3 groundOffset;
+
+
+
+    /* health system */
     public GameObject Health1;
     public GameObject Health2;
     public GameObject Health3;
     public GameObject Health4;
     public GameObject Health5;
+    public bool Invincibility;
+    public float ImmunityTime = 0.02f;
+    public bool isAlive = false;
+    public int Health;
+    public bool HealthIncreasetimerLimit;
+    public float HealthlimitTime;
 
     //How fast/slow the player falls
     public float gravityScale;
     public CharacterController controller;
-
     private Vector3 moveDirection;
-
     private Transform pivotTransform;
-
-    public bool Invincibility;
-    public float ImmunityTime = 0.02f;
-
+    //rotation lock
     public float MaxRotationAngle = 8.0f;
 
-    private bool isJumping = false;
-    private float jumpT = 0.0f;
-    private float jumpOffset = 0.0f;
-    private Vector3 groundOffset;
+
+
+
     private void Start()
     {
+        rotationScript.GetComponent("Stop");
+
         pivotTransform = transform.parent;
 
         HealthIncreasetimerLimit = false;
@@ -102,15 +110,12 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        //if (transform.localPosition > groundOffset + new Vector3(0, jumpForce * Mathf.Sin(jumpT), 3.0f)
-        //{
-        //    transform.localPosition > = 3.0f;
-        //}
-        //HealthCheck();
-        //
-        ////Adds gravity as the player falls
-        //moveDirection.y = moveDirection.y + (Physics.gravity.y * gravityScale);
-        //controller.Move(moveDirection * Time.deltaTime);
+        HealthCheck();
+
+        if (isAlive == false)
+        {
+            GAMEOVER();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -172,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HealthCheck()
     {
-            Debug.Log(Health);
+        Debug.Log(Health);
         if (Health == 5)
         {
             Health1.SetActive(true);
@@ -219,17 +224,22 @@ public class PlayerMovement : MonoBehaviour
             Health5.SetActive(false);
         }
 
-        if (Health == 0)
+        if (Health <= 0)
         {
             Health1.SetActive(false);
             Health2.SetActive(false);
             Health3.SetActive(false);
             Health4.SetActive(false);
             Health5.SetActive(false);
+            Health = 0;
             isAlive = false;
         }
     }
 
+    public void GAMEOVER()
+    {
+        rotationScript.Stop();
+    }
 }
 
 
