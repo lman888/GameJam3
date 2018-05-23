@@ -257,7 +257,7 @@ Prefab:
     - target: {fileID: 114825189609528886, guid: 845c58e586079a647a5d31eb287922d5,
         type: 2}
       propertyPath: floorOffset
-      value: 0.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114825189609528886, guid: 845c58e586079a647a5d31eb287922d5,
         type: 2}
@@ -369,6 +369,7 @@ MonoBehaviour:
   boostSpeed: 10
   boostTime: 2
   health: 5
+  StopSpeed: 0
 --- !u!4 &1415033657
 Transform:
   m_ObjectHideFlags: 0

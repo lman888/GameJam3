@@ -65,7 +65,7 @@ public class obstacleGenerator : MonoBehaviour
             if (hitSomething)
             {
                 spawnerSet.Add(Instantiate(spawner));
-                spawnerSet[0].transform.position = hitInfo.point;// + new Vector3 (hitInfo.normal.x + floorOffset, hitInfo.normal.y, hitInfo.normal.z);
+                spawnerSet[0].transform.position = hitInfo.point + (hitInfo.normal * floorOffset);
                 spawnerSet[0].transform.up = hitInfo.normal;
                 spawnerSet[0].transform.SetParent(ground.transform.Find("ObjectHolder").transform);
             }
@@ -77,7 +77,7 @@ public class obstacleGenerator : MonoBehaviour
             if (hitSomething)
             {
                 spawnerSet.Add(Instantiate(spawner));
-                spawnerSet[1].transform.position = hitInfo.point;// + new Vector3(hitInfo.normal.x + floorOffset, hitInfo.normal.y, hitInfo.normal.z);
+                spawnerSet[1].transform.position = hitInfo.point + (hitInfo.normal * floorOffset);
                 spawnerSet[1].transform.up = hitInfo.normal;
                 spawnerSet[1].transform.SetParent(ground.transform.Find("ObjectHolder").transform);
             }
@@ -88,7 +88,7 @@ public class obstacleGenerator : MonoBehaviour
             if (hitSomething)
             {
                 spawnerSet.Add(Instantiate(spawner));
-                spawnerSet[2].transform.position = hitInfo.point;// + new Vector3(hitInfo.normal.x + floorOffset, hitInfo.normal.y, hitInfo.normal.z);
+                spawnerSet[2].transform.position = hitInfo.point + (hitInfo.normal * floorOffset);
                 spawnerSet[2].transform.up = hitInfo.normal;
                 spawnerSet[2].transform.SetParent(ground.transform.Find("ObjectHolder").transform);
             }
