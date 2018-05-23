@@ -31,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
     public bool Invincibility;
     public float ImmunityTime = 0.02f;
 
+    public float MaxRotationAngle = 8.0f;
+
     private bool isJumping = false;
     private float jumpT = 0.0f;
     private float jumpOffset = 0.0f;
@@ -60,6 +62,19 @@ public class PlayerMovement : MonoBehaviour
         GetComponent<Rigidbody>().WakeUp();
 
         pivotTransform.Rotate(Vector3.right, -Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime, Space.World);
+        Vector3 rot = pivotTransform.rotation.eulerAngles;
+        if (rot.x < 180)
+        {
+            rot.x = Mathf.Min(rot.x, MaxRotationAngle);
+        }
+        if (rot.x > 180)
+        {
+            rot.x = Mathf.Max(rot.x, 360 - MaxRotationAngle);
+        }
+
+        Quaternion qRot = Quaternion.Euler(rot);
+        pivotTransform.rotation = qRot;
+
 
         //Arrow keys to move
         //moveDirection = new Vector3(Input.GetAxis("Horizontal")  * moveSpeed * Time.deltaTime, 0f);
@@ -87,7 +102,11 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        HealthCheck();
+        //if (transform.localPosition > groundOffset + new Vector3(0, jumpForce * Mathf.Sin(jumpT), 3.0f)
+        //{
+        //    transform.localPosition > = 3.0f;
+        //}
+        //HealthCheck();
         //
         ////Adds gravity as the player falls
         //moveDirection.y = moveDirection.y + (Physics.gravity.y * gravityScale);
